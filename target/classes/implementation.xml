@@ -13,18 +13,8 @@ http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/cu
 		<http:listener config-ref="HTTP_Listener_Configuration" path="/flights" allowedMethods="GET" doc:name="HTTP"/>
 		<flow-ref name="getDeltaFlightsFlow" doc:name="getDeltaFlightsFlow"/>
 		<logger level="INFO" doc:name="Logger"/>
-		<choice-exception-strategy doc:name="Choice Exception Strategy">
-			<catch-exception-strategy when="#[exception.causeMatches('com.mulesoft.weave.*')]" doc:name="No flights&#8211;DW exception">
-				<set-payload value="NO FLIGHTS to #[flowVars.code+  '\n'+ exception]" doc:name="Set Payload"/>
-				<set-property propertyName="http.status" value="400" doc:name="Property"/>
-				<logger level="INFO" doc:name="Logger"/>
-			</catch-exception-strategy>
-			<catch-exception-strategy doc:name="Data unavailable&#8211;all otherexceptions">
-				<set-payload value="DATA IS UNAVAILABLE. TRY LATER. #['\n'+ exception]" doc:name="Set Payload"/>
-				<set-property propertyName="http.status" value="500" doc:name="Property"/>
-				<logger level="INFO" doc:name="Logger"/>
-			</catch-exception-strategy>
-		</choice-exception-strategy>
+		<exception-strategy ref="Choice_Exception_Strategy" doc:name="Reference Exception Strategy"/>
+
 	</flow>
 	<sub-flow name="setCodeSubflow">
 		<set-variable variableName="code" value="#[(message.inboundProperties.'http.query.params'.code==empty)? 'SFO':  message.inboundProperties.'http.query.params'.code]" doc:name="Variable"/>
@@ -54,6 +44,7 @@ payload.flights map ((flight , indexOfFlight) -> {
 })]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
+		<exception-strategy ref="Choice_Exception_Strategy" doc:name="Reference Exception Strategy"/>
 	</flow>
 	<flow name="getAmericanFlightsFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration" path="/american" allowedMethods="GET" doc:name="HTTP"/>
