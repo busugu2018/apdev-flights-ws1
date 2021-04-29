@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd">
+	<context:property-placeholder location="flights-${env}.properties"/>
+	<http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
+	<http:request-config name="United_REST_Request_Configuration" host="${united.host}" port="80" doc:name="HTTP Request Configuration"/>
+	<http:request-config name="American_HTTP_Request_Configuration" host="training-american1ws-zi.us-e2.cloudhub.io" port="80" basePath="/api/" doc:name="HTTP Request Configuration">
+		<http:raml-api-configuration location="https://exchange2-asset-manager-kprod.s3.amazonaws.com/d8c7a3d4-b0f8-4633-8525-ea4ead1fcac7/08aa5a8d8a3ee0a17b0ba6d506fecbf5338bedf13eef6a11dc1a571d4ddb8ecc.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=ASIAVQT2Q7OAFXGQEJN5%2F20210428%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20210428T212758Z&amp;X-Amz-Expires=86400&amp;X-Amz-Security-Token=FwoGZXIvYXdzEP7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDJP6JbRIGoZFWM7Y8yLIAbO8xoescPpVXEfD0V%2Bdv3Q0w%2FAov4Yb7TYkUEq69mk947W3J6eU2wzl7tw8%2BVu7780PcYyQZ8HqyA4RAqrYXVrLE0WvgncmezfB%2B3uxx0N9CMf1nS4NJd3hNeKF3OGor27SAPW0gNDvSLuo%2FjVj5juCHiACjSOjwIGfDAPIrZBC5WaUdW9PI3bw5G7jhSRmsPJf%2Fgh2ocLwUzmEuubjeIWK1UX3G3iiaIRLfTsJh7xXJSSZJehfkhPZbAXsQ1gY%2FTbD1hw4ym%2FrKMCTp4QGMi03hY5uvk08MJjRw4h%2B278NRmh6zcOkJ2xKUa2L1qk2fd4dkBrncK0KNiD4hs0%3D&amp;X-Amz-Signature=da0ead388ebe9df4a54c59d94a1f2627056f0364aa157bdb34547c0101ac965a&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=attachment%3B%20filename%3Damerican-flight-api-1.0.2-raml.zip"/>
+	</http:request-config>
+	<ws:consumer-config name="Delta_Web_Service_Consumer" wsdlLocation="http://mu.mulesoft-training.com/essentials/delta?wsdl" service="TicketServiceService" port="TicketServicePort" serviceAddress="http://mu.mulesoft-training.com/essentials/delta" doc:name="Web Service Consumer"/>
+</mule>
