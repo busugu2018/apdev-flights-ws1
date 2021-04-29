@@ -91,5 +91,10 @@ payload.ns0#findFlightResponse.*return map ((return , indexOfReturn) -> {
 })]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+			<set-payload value="NO FLIGHTS to #[flowVars.code+  '\n'+ exception]" doc:name="Set Payload"/>
+			<set-property propertyName="http.status" value="400" doc:name="Property"/>
+			<logger level="INFO" doc:name="Logger"/>
+		</catch-exception-strategy>
 	</flow>
 </mule>
