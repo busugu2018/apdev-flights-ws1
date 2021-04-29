@@ -62,6 +62,22 @@ payload map ((payload01 , indexOfPayload01) -> {
 	<flow name="getDeltaFlightsFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration" path="/delta" allowedMethods="GET" doc:name="HTTP"/>
 		<ws:consumer config-ref="Delta_Web_Service_Consumer" operation="listAllFlights" doc:name="Delta SOAP Request"/>
+		<dw:transform-message doc:name="Transform Message" metadata:id="5416bce0-f877-4cbd-bbab-1a9c00aa51cf">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%namespace ns0 http://soap.training.mulesoft.com/
+---
+payload.ns0#listAllFlightsResponse.*return map ((return , indexOfReturn) -> {
+	airline: return.airlineName,
+	flightCode: return.code,
+	fromAirportCode: return.origin,
+	toAirportCode: return.destination,
+	departureDate: return.departureDate,
+	emptySeats: return.emptySeats,
+	price: return.price,
+	planeType: return.planeType
+})]]></dw:set-payload>
+		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
 </mule>
