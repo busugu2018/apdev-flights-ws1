@@ -24,9 +24,15 @@ http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/cu
 				<flow-ref name="getAmericanFlightsFlow" doc:name="getAmericanFlightsFlow"/>
 			</when>
 			<otherwise>
-				<logger level="INFO" doc:name="Logger"/>
+				<flow-ref name="getAllAirlineFlightsFlow" doc:name="getAllAirlineFlightsFlow"/>
 			</otherwise>
 		</choice>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload orderBy $.price]]></dw:set-payload>
+		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 
 	</flow>
@@ -104,6 +110,20 @@ payload.ns0#findFlightResponse.*return map ((return , indexOfReturn) -> {
 	price: return.price,
 	planeType: return.planeType
 })]]></dw:set-payload>
+		</dw:transform-message>
+		<logger level="INFO" doc:name="Logger"/>
+	</flow>
+	<flow name="getAllAirlineFlightsFlow">
+		<scatter-gather doc:name="Scatter-Gather">
+			<flow-ref name="getDeltaFlightsFlow" doc:name="getDeltaFlightsFlow"/>
+			<flow-ref name="getUnitedFlightsFlow" doc:name="getUnitedFlightsFlow"/>
+			<flow-ref name="getAmericanFlightsFlow" doc:name="getAmericanFlightsFlow"/>
+		</scatter-gather>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+flatten payload]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
