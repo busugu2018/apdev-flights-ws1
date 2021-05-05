@@ -72,7 +72,7 @@ payload.flights map ((flight , indexOfFlight) -> {
 %output application/java
 ---
 payload map ((payload01 , indexOfPayload01) -> {
-	airlineName: "American",
+	airlineName: "American" ++ null,
 	availableSeats: payload01.emptySeats,
 	departureDate: payload01.departureDate,
 	destination: payload01.destination,
@@ -120,9 +120,18 @@ payload.ns0#findFlightResponse.*return map ((return , indexOfReturn) -> {
 	</flow>
 	<flow name="getAllAirlineFlightsFlow">
 		<scatter-gather doc:name="Scatter-Gather">
-			<flow-ref name="getDeltaFlightsFlow" doc:name="getDeltaFlightsFlow"/>
-			<flow-ref name="getUnitedFlightsFlow" doc:name="getUnitedFlightsFlow"/>
-			<flow-ref name="getAmericanFlightsFlow" doc:name="getAmericanFlightsFlow"/>
+			<processor-chain>
+				<flow-ref name="getDeltaFlightsFlow" doc:name="getDeltaFlightsFlow"/>
+				<payload-type-filter expectedType="java.util.ArrayList" doc:name="Payload"/>
+			</processor-chain>
+			<processor-chain>
+				<flow-ref name="getUnitedFlightsFlow" doc:name="getUnitedFlightsFlow"/>
+				<payload-type-filter expectedType="java.util.ArrayList" doc:name="Payload"/>
+			</processor-chain>
+			<processor-chain>
+				<flow-ref name="getAmericanFlightsFlow" doc:name="getAmericanFlightsFlow"/>
+				<payload-type-filter expectedType="java.util.ArrayList" doc:name="Payload"/>
+			</processor-chain>
 		</scatter-gather>
 		<dw:transform-message doc:name="Transform Message">
 			<dw:set-payload><![CDATA[%dw 1.0
