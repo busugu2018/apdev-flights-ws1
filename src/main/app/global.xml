@@ -21,6 +21,11 @@ http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/cu
 	<payload-type-filter expectedType="java.util.ArrayList" name="Filter_Not_ArrayList" doc:name="Payload"/>
 
 		<choice-exception-strategy name="Choice_Exception_Strategy">
+		<catch-exception-strategy when="#[exception.causedBy(java.lang.IllegalArgumentException)]" doc:name="No destination code set">
+			<set-payload value="#[exception.message]" doc:name="Set Payload"/>
+			<set-property propertyName="http.status" value="400" doc:name="Property"/>
+		<logger level="INFO" doc:name="Logger"/>	
+		</catch-exception-strategy>			
 			<catch-exception-strategy when="#[exception.causeMatches('com.mulesoft.weave.*')]" doc:name="No flights&#8211;DW exception">
 				<set-payload value="NO FLIGHTS to #[flowVars.code+  '\n'+ exception]" doc:name="Set Payload"/>
 				<set-property propertyName="http.status" value="400" doc:name="Property"/>
@@ -31,6 +36,7 @@ http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/cu
 				<set-property propertyName="http.status" value="500" doc:name="Property"/>
 				<logger level="INFO" doc:name="Logger"/>
 			</catch-exception-strategy>
+
 		</choice-exception-strategy>
 
 </mule>
