@@ -143,4 +143,14 @@ flatten payload]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
+	<flow name="postFlightFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/flights" allowedMethods="POST" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+		</dw:transform-message>
+		<logger level="INFO" doc:name="Logger"/>
+	</flow>
 </mule>
