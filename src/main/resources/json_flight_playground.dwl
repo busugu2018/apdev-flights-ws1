@@ -1,4 +1,8 @@
 %dw 1.0
-%output application/java
+%output application/xml
 ---
-payload
+data: {
+	hub: "MUA",
+	code: payload.toAirportCode,
+	airline: payload.airline
+}
