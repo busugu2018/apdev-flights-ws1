@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "fligt_json"
+        }
+    },
+    "outputMessageMetadata": {},
+    "id": "9303e3cb-7079-4882-939a-8ed6a65d27ac",
+    "version": "5.2.0.0"
+}
