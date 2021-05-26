@@ -161,4 +161,18 @@ data: {
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
+	<flow name="postMultipleFlightsFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/multipleFlights" allowedMethods="POST" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message" metadata:id="d5f449a2-11cd-47c8-a331-ea342b4870c2">
+			<dw:input-payload doc:sample="/Users/nziemaraangnzienguiboussougou/Desktop/MUFundamentals3.9_studentFiles_13apr2020/examples/flights-example.json" mimeType="application/json"/>
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+---
+flights: payload map {
+	flight: $$,
+	'flights$$': $
+}]]></dw:set-payload>
+		</dw:transform-message>
+		<logger level="INFO" doc:name="Logger"/>
+	</flow>
 </mule>
