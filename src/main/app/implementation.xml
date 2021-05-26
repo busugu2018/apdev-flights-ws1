@@ -148,6 +148,16 @@ flatten payload]]></dw:set-payload>
 		<dw:transform-message doc:name="Transform Message" metadata:id="9303e3cb-7079-4882-939a-8ed6a65d27ac">
 			<dw:input-payload doc:sample="/Users/nziemaraangnzienguiboussougou/Desktop/MUFundamentals3.9_studentFiles_13apr2020/examples/flight-example.json" mimeType="application/json"/>
 			<dw:set-payload resource="classpath:json_flight_playground.dwl"/>
+			<dw:set-variable variableName="xml"><![CDATA[%dw 1.0
+%output application/xml
+---
+data: {
+	hub: "MUA",
+	flight:  {
+		code: payload.toAirportCode,
+		airline: payload.airline	
+	}
+}]]></dw:set-variable>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
