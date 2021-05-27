@@ -171,9 +171,11 @@ data: {
 flights: payload.ns0#listAllFlightsResponse.*return map {
 		dest: $.destination,
 		price: $.price as :number as :string {format: "###.##"},
-		plane: upper $.planeType,
-		date: $.departureDate as :date {format: "yyyy/MM/dd"} as :string {format: "MMM dd, yyyy"}
-}]]></dw:set-payload>
+		plane: upper $.planeType replace /(BOING)/ with "BOEING",
+		date: $.departureDate as :date {format: "yyyy/MM/dd"} as :string {format: "MMM dd, yyyy"},
+		seat: $.emptySeats as :number
+} orderBy $.date orderBy $.price distinctBy $
+	filter ($.seats !=0)]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
 	</flow>
