@@ -164,13 +164,15 @@ data: {
 	<flow name="postMultipleFlightsFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration" path="/multipleFlights" allowedMethods="POST" doc:name="HTTP"/>
 		<dw:transform-message doc:name="Transform Message" metadata:id="d5f449a2-11cd-47c8-a331-ea342b4870c2">
-			<dw:input-payload doc:sample="/Users/nziemaraangnzienguiboussougou/Desktop/MUFundamentals3.9_studentFiles_13apr2020/examples/flights-example.json" mimeType="application/json"/>
+			<dw:input-payload doc:sample="/Users/nziemaraangnzienguiboussougou/Desktop/MUFundamentals3.9_studentFiles_13apr2020/examples/flights-example.xml" mimeType="application/xml"/>
 			<dw:set-payload><![CDATA[%dw 1.0
-%output application/xml
+%output application/java
 ---
-flights: payload map {
-	flight: $$,
-	'flights$$': $
+flights: payload.ns0#listAllFlightsResponse.*return map {
+		dest: $.destination,
+		price: $.price as :number as :string {format: "###.##"},
+		plane: upper $.planeType,
+		date: $.departureDate as :date {format: "yyyy/MM/dd"} as :string {format: "MMM dd, yyyy"}
 }]]></dw:set-payload>
 		</dw:transform-message>
 		<logger level="INFO" doc:name="Logger"/>
